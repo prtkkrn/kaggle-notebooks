@@ -36,6 +36,12 @@ jobs:
           mkdir -p notebooks
           kaggle kernels pull prateekkiran/ai-workscape-salaries-skills-forecasts -p notebooks
           kaggle kernels pull prateekkiran/ride-trends-and-customer-insights-in-ncr -p notebooks
+          kaggle kernels pull prateekkiran/minute-level-crypto-forecast-with-lgbm -p notebooks
+          kaggle kernels pull prateekkiran/smart-device-analysis -p notebooks
+          kaggle kernels pull prateekkiran/google-stock-price-analysis-forecasting-5-year -p notebooks
+          kaggle kernels pull prateekkiran/predicting-optimal-fertilizers -p notebooks
+          kaggle kernels pull prateekkiran/clustering-intelligence-how-countries-embrace-ai -p notebooks
+          kaggle kernels pull prateekkiran/city-air-quality-eda-ml-models -p notebooks
           ls -lh notebooks
 
       - name: Commit & push changes (if any)
