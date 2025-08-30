@@ -34,7 +34,7 @@ jobs:
       - name: Pull notebooks from Kaggle
         run: |
           mkdir -p notebooks
-          kaggle kernels pull prateekkiran/ai-workspace-salaries-skills-forecasts -p notebooks
+          kaggle kernels pull prateekkiran/ai-workscape-salaries-skills-forecasts -p notebooks
           kaggle kernels pull prateekkiran/ride-trends-and-customer-insights-in-ncr -p notebooks
           ls -lh notebooks
 
