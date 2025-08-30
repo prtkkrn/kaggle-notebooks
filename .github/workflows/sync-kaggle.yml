@@ -1,0 +1,52 @@
+name: Sync Kaggle Notebooks
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"   # every 6 hours, in UTC
+  workflow_dispatch:        # lets you run it manually from Actions
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Kaggle CLI
+        run: |
+          python -m pip install --upgrade pip
+          pip install kaggle
+
+      - name: Configure Kaggle credentials
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+        run: |
+          mkdir -p ~/.kaggle
+          printf '{"username":"%s","key":"%s"}' "$KAGGLE_USERNAME" "$KAGGLE_KEY" > ~/.kaggle/kaggle.json
+          chmod 600 ~/.kaggle/kaggle.json
+
+      - name: Pull notebooks from Kaggle
+        run: |
+          mkdir -p notebooks
+          kaggle kernels pull prtkkrn/ai-workspace-salaries-skills-forecasts -p notebooks --force
+          kaggle kernels pull prtkkrn/ride-trends-and-customer-insights-in-ncr -p notebooks --force
+
+      - name: Commit & push changes (if any)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes."
+          else
+            git commit -m "Sync Kaggle notebooks (.ipynb) [skip ci]"
+            git push
+          fi
